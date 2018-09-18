@@ -1,0 +1,167 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>BBL Ca center</title><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" name="viewport"><link href="node_modules/reveal.js/css/reveal.css" rel="stylesheet"><link rel="stylesheet" href="node_modules/reveal.js/css/theme/white.css" id="theme"><link href="node_modules/reveal.js/lib/css/zenburn.css" rel="stylesheet"><script>var link = document.createElement( 'link' );
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = window.location.search.match( /print-pdf/gi ) ? "node_modules/reveal.js/css/print/pdf.css" : "node_modules/reveal.js/css/print/paper.css";
+document.getElementsByTagName( 'head' )[0].appendChild( link );</script><!--[if lt IE 9]><script src="node_modules/reveal.js/lib/js/html5shiv.js"></script><![endif]--></head><body><div class="reveal"><div class="slides"><section class="title" data-state="title"><h1>BBL Ca center</h1><div class="preamble"><div class="paragraph"><p>Découvrez Kotlin et la création de DSL en Live Coding</p></div>
+<div class="ulist"><ul><li><p><a href="https://twitter.com/tgirard12">@tgirard12</a></p></li><li><p><a href="https://github.com/tgirard12/talk-bbl-ca-kotlin-dsl" class="bare">https://github.com/tgirard12/talk-bbl-ca-kotlin-dsl</a></p></li><li><p>Dev Back-end chez Netheos</p></li></ul></div>
+<div class="imageblock" style=""><img src="https://cdn-images-1.medium.com/max/1200/1*fnbqF0xNVwINs_RkygkX1g.png" alt="1*fnbqF0xNVwINs RkygkX1g" height="200px"></div></div></section>
+<section><section id="dsl"><h2>DSL</h2><div class="paragraph"><p>(Domain-specific language)</p></div><div class="ulist"><ul><li><p>Language métier</p></li><li><p>Facile à écrire / lire</p></li><li><p>Utilisable par des non-développeur</p></li><li><p>Avec Kotlin :</p><div class="ulist"><ul><li><p>Compilé, statiquement typé</p></li><li><p>Utilisable en dev, test, par la QA</p></li><li><p>Completion</p></li></ul></div></li></ul></div></section><section id="html_sample"><h2>Html sample</h2><div class="paragraph"><p><a href="https://github.com/Kotlin/kotlinx.html" class="bare">https://github.com/Kotlin/kotlinx.html</a></p></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">html {
+    body {
+        div {
+            a("http://kotlinlang.org") {
+                target = ATarget.blank
+                +"Main site"
+            }
+        }
+    }
+}</code></pre></div></div></section><section id="gradle_sample"><h2>Gradle sample</h2><div class="paragraph"><p><a href="https://github.com/gradle/kotlin-dsl" class="bare">https://github.com/gradle/kotlin-dsl</a></p></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">plugins {
+    kotlin("jvm") version "1.2.71"
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile(kotlin("stdlib-jdk8"))
+
+    testCompile("io.kotlintest:kotlintest-runner-junit5:3.1.9")
+}</code></pre></div></div></section><section id="android_sample"><h2>Android sample</h2><div class="paragraph"><p><a href="https://github.com/Kotlin/anko" class="bare">https://github.com/Kotlin/anko</a></p></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">verticalLayout {
+    val name = editText()
+    button("Say Hello") {
+        onClick { toast("Hello, ${name.text}!") }
+    }
+}</code></pre></div></div></section><section id="spring"><h2>Spring</h2><div class="paragraph"><p><a href="https://github.com/spring-projects/spring-fu/" class="bare">https://github.com/spring-projects/spring-fu/</a></p></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">application {
+    bean&lt;UserHandler&gt;()
+    bean&lt;UserRepository&gt;()
+    server {
+        port = if (profiles.contains("test")) 8181 else 8080
+        codecs { jackson() }
+        router {
+            GET("/", userHandler::listView)
+            GET("/api/user", userHandler::listApi)
+            GET("/conf", userHandler::conf)
+        }
+    }
+    mongodb { embedded() }
+}.run()</code></pre></div></div></section></section>
+<section><section id="idioms"><h2>Idioms</h2></section><section id="hello_word"><h2>Hello Word</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">fun main() {
+  val scope = "World"
+  println("Hello, $scope!")
+}</code></pre></div></div></section><section id="null_check"><h2>Null check</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">val foo = "bar"
+// foo = "foo" =&gt; Compile error
+
+var bar: String? = null
+println(bar?.length ?: "0")</code></pre></div></div></section><section id="extension_function"><h2>Extension function</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">fun String.lastChar(): Char = this.get(length - 1)</code></pre></div></div></section><section id="collections"><h2>Collections</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">val positives = list.filter { x -&gt; x &gt; 0 }</code></pre></div></div></section><section id="functions"><h2>Functions</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">val f1 = { print("no parameters") }
+val f2: () -&gt; Unit = { print("no parameters") }</code></pre></div></div></section><section id="data_class"><h2>Data class</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape>data class User(
+    val id: Int,
+    val name: String,
+    val address: String
+)</code></pre></div></div></section><section id="when"><h2>When</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">val b = when (y) {
+    is Foo -&gt; "Foo"
+    is Bar -&gt; "Bar"
+    else -&gt; "else"
+}
+
+when (val x = getX()) {
+    is String -&gt; println("String")
+    in 1..10 -&gt; println("Range")
+    x == Foo(10) -&gt; println("Foo")
+    else -&gt; println("else")
+}</code></pre></div></div></section></section>
+<section id="historique"><h2>Historique</h2><div class="ulist"><ul><li><p>Annoncé en 2011</p></li><li><p>v1.0 février 2016</p></li><li><p>Support officiel Android</p></li><li><p>v1.2 novembre 2017</p></li><li><p>v1.3 octobre 2018</p></li></ul></div></section></div></div><script src="node_modules/reveal.js/lib/js/head.min.js"></script><script src="node_modules/reveal.js/js/reveal.js"></script><script>// See https://github.com/hakimel/reveal.js#configuration for a full list of configuration options
+Reveal.initialize({
+  // Display controls in the bottom right corner
+  controls: true,
+  // Display a presentation progress bar
+  progress: true,
+  // Set a per-slide timing for speaker notes, null means none
+  defaultTiming: null,
+  // Display the page number of the current slide
+  slideNumber: false,
+  // Push each slide change to the browser history
+  history: false,
+  // Enable keyboard shortcuts for navigation
+  keyboard: true,
+  // Enable the slide overview mode
+  overview: true,
+  // Vertical centering of slides
+  center: true,
+  // Enables touch navigation on devices with touch input
+  touch: true,
+  // Loop the presentation
+  loop: false,
+  // Change the presentation direction to be RTL
+  rtl: false,
+  // Randomizes the order of slides each time the presentation loads
+  shuffle: false,
+  // Turns fragments on and off globally
+  fragments: true,
+  // Flags if the presentation is running in an embedded mode,
+  // i.e. contained within a limited portion of the screen
+  embedded: false,
+  // Flags if we should show a help overlay when the questionmark
+  // key is pressed
+  help: true,
+  // Flags if speaker notes should be visible to all viewers
+  showNotes: false,
+  // Global override for autolaying embedded media (video/audio/iframe)
+  // - null: Media will only autoplay if data-autoplay is present
+  // - true: All media will autoplay, regardless of individual setting
+  // - false: No media will autoplay, regardless of individual setting
+  autoPlayMedia: null,
+  // Number of milliseconds between automatically proceeding to the
+  // next slide, disabled when set to 0, this value can be overwritten
+  // by using a data-autoslide attribute on your slides
+  autoSlide: 0,
+  // Stop auto-sliding after user input
+  autoSlideStoppable: true,
+  // Enable slide navigation via mouse wheel
+  mouseWheel: false,
+  // Hides the address bar on mobile devices
+  hideAddressBar: true,
+  // Opens links in an iframe preview overlay
+  previewLinks: false,
+  // Theme (e.g., beige, black, league, night, serif, simple, sky, solarized, white)
+  // NOTE setting the theme in the config no longer works in reveal.js 3.x
+  //theme: Reveal.getQueryHash().theme || 'white',
+  // Transition style (e.g., none, fade, slide, convex, concave, zoom)
+  transition: Reveal.getQueryHash().transition || 'slide',
+  // Transition speed (e.g., default, fast, slow)
+  transitionSpeed: 'default',
+  // Transition style for full page slide backgrounds (e.g., none, fade, slide, convex, concave, zoom)
+  backgroundTransition: 'fade',
+  // Number of slides away from the current that are visible
+  viewDistance: 3,
+  // Parallax background image (e.g., "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'")
+  parallaxBackgroundImage: '',
+  // Parallax background size in CSS syntax (e.g., "2100px 900px")
+  parallaxBackgroundSize: '',
+
+  // The "normal" size of the presentation, aspect ratio will be preserved
+  // when the presentation is scaled to fit different resolutions. Can be
+  // specified using percentage units.
+  width: 960,
+  height: 700,
+
+  // Factor of the display size that should remain empty around the content
+  margin: 0.1,
+
+  // Bounds for smallest/largest possible scale to apply to content
+  minScale: 0.2,
+  maxScale: 1.5,
+
+  // Optional libraries used to extend on reveal.js
+  dependencies: [
+      { src: 'node_modules/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'node_modules/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'node_modules/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'node_modules/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'node_modules/reveal.js/plugin/zoom-js/zoom.js', async: true },
+      { src: 'node_modules/reveal.js/plugin/notes/notes.js', async: true }
+  ]
+});</script></body></html>

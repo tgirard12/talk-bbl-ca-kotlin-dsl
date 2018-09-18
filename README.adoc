@@ -1,0 +1,186 @@
+= BBL Ca center
+:revealjs_theme: white
+:source-highlighter: highlightjs
+
+Découvrez Kotlin et la création de DSL en Live Coding
+
+- https://twitter.com/tgirard12[@tgirard12]
+- https://github.com/tgirard12/talk-bbl-ca-kotlin-dsl
+- Dev Back-end chez Netheos
+
+image::https://cdn-images-1.medium.com/max/1200/1*fnbqF0xNVwINs_RkygkX1g.png[height=200px]
+
+
+== DSL
+(Domain-specific language)
+
+- Language métier
+- Facile à écrire / lire
+- Utilisable par des non-développeur
+- Avec Kotlin :
+    ** Compilé, statiquement typé
+    ** Utilisable en dev, test, par la QA
+    ** Completion
+
+
+=== Html sample
+
+https://github.com/Kotlin/kotlinx.html
+
+[source,kotlin]
+----
+html {
+    body {
+        div {
+            a("http://kotlinlang.org") {
+                target = ATarget.blank
+                +"Main site"
+            }
+        }
+    }
+}
+----
+
+=== Gradle sample
+
+https://github.com/gradle/kotlin-dsl
+
+[source,kotlin]
+----
+plugins {
+    kotlin("jvm") version "1.2.71"
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile(kotlin("stdlib-jdk8"))
+
+    testCompile("io.kotlintest:kotlintest-runner-junit5:3.1.9")
+}
+----
+
+
+=== Android sample
+
+https://github.com/Kotlin/anko
+
+[source,kotlin]
+----
+verticalLayout {
+    val name = editText()
+    button("Say Hello") {
+        onClick { toast("Hello, ${name.text}!") }
+    }
+}
+----
+
+=== Spring
+
+https://github.com/spring-projects/spring-fu/
+
+[source,kotlin]
+----
+application {
+    bean<UserHandler>()
+    bean<UserRepository>()
+    server {
+        port = if (profiles.contains("test")) 8181 else 8080
+        codecs { jackson() }
+        router {
+            GET("/", userHandler::listView)
+            GET("/api/user", userHandler::listApi)
+            GET("/conf", userHandler::conf)
+        }
+    }
+    mongodb { embedded() }
+}.run()
+----
+
+== Idioms
+
+=== Hello Word
+
+[source,kotlin]
+----
+fun main() {
+  val scope = "World"
+  println("Hello, $scope!")
+}
+----
+
+=== Null check
+
+[source,kotlin]
+----
+val foo = "bar"
+// foo = "foo" => Compile error
+
+var bar: String? = null
+println(bar?.length ?: "0")
+----
+
+===  Extension function
+
+[source,kotlin]
+----
+fun String.lastChar(): Char = this.get(length - 1)
+----
+
+=== Collections
+
+[source,kotlin]
+----
+val positives = list.filter { x -> x > 0 }
+----
+
+=== Functions
+
+[source,kotlin]
+----
+val f1 = { print("no parameters") }
+val f2: () -> Unit = { print("no parameters") }
+----
+
+=== Data class
+
+----
+data class User(
+    val id: Int,
+    val name: String,
+    val address: String
+)
+----
+
+=== When
+
+[source,kotlin]
+----
+val b = when (y) {
+    is Foo -> "Foo"
+    is Bar -> "Bar"
+    else -> "else"
+}
+
+when (val x = getX()) {
+    is String -> println("String")
+    in 1..10 -> println("Range")
+    x == Foo(10) -> println("Foo")
+    else -> println("else")
+}
+----
+
+
+== Links
+
+- https://kotlinlang.org/    -      https://kotlinlang.org/docs/reference/
+- https://play.kotlinlang.org
+- https://kotlinlang.slack.com[Slack]
+- https://kotlinlang.org/docs/reference/coroutines-overview.html[Coroutines]
+- https://kotlinlang.org/docs/reference/multiplatform.html[Multiplatform]
+    ** https://kotlinlang.org/docs/reference/native-overview.html[Native + WebAssembly + Ios]
+    ** https://kotlinlang.org/docs/reference/js-overview.html[Js + wrapper React]
+    ** https://kotlinlang.org/docs/reference/server-overview.html[Server JVM]
+    ** https://kotlinlang.org/docs/reference/android-overview.html[Android]
